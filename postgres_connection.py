@@ -1,6 +1,6 @@
 import psycopg2
 import os
-import csv
+
 
 conn = psycopg2.connect("host=localhost dbname=AirBNB user=postgres password=Aspen909")
 
@@ -28,7 +28,7 @@ cur.execute("""
 """)
 
 cur.execute("""
-    CREATE TABLE IF NOT EXISTS denver.listings(
+    CREATE TABLE IF NOT EXISTS AirBNB_Pipeline.denver.listings(
     listing_id integer PRIMARY KEY ,
     listing_name text,
     host_id	bigint,
@@ -49,14 +49,14 @@ cur.execute("""
 """)
 
 cur.execute("""
-    CREATE TABLE IF NOT EXISTS denver.reviews (
+    CREATE TABLE IF NOT EXISTS AirBNB_Pipeline.denver.reviews (
     listing_id integer,
     review_date date
     )
 """)
 
 cur.execute("""
-    CREATE TABLE IF NOT EXISTS denver.neighbourhoods(
+    CREATE TABLE IF NOT EXISTS AirBNB_Pipeline.denver.neighbourhoods(
     neighbourhood_group text, 
     neighbourhood text
     )
@@ -77,7 +77,7 @@ for i in listings_csv_files:
         print(i)
         cur.copy_expert("""COPY templistings FROM STDIN WITH (FORMAT CSV)""", f)
         cur.execute("""
-                INSERT INTO denver.listings(
+                INSERT INTO AirBNB_Pipeline.denver.listings(
                     listing_id,
                     listing_name,
                     host_id,
@@ -114,7 +114,7 @@ for i in listings_csv_files:
                 FROM templistings t
                 WHERE t.listing_id not in (
                     select listing_id
-                    from denver.listings
+                    from AirBNB_Pipeline.denver.listings
                 )
             """)
 
@@ -122,14 +122,13 @@ for i in reviews_csv_files:
     with open("/Users/maxblanchard/PycharmProjects/Airbnb_data_pipeline/AirBNB_Downloads/Reviews/" + i, 'r') as f:
         next(f)
         print(i)
-        cur.copy_expert("""COPY denver.reviews FROM STDIN WITH (FORMAT CSV)""", f)
+        cur.copy_expert("""COPY AirBNB_Pipeline.denver.reviews FROM STDIN WITH (FORMAT CSV)""", f)
 
 for i in neighborhoods_csv_files:
     with open("/Users/maxblanchard/PycharmProjects/Airbnb_data_pipeline/AirBNB_Downloads/Neighbourhoods/"
               + i, 'r') as f:
         next(f)
-        cur.copy_expert("""COPY denver.neighbourhoods FROM STDIN WITH (FORMAT CSV)""", f)
-
+        cur.copy_expert("""COPY AirBNB_Pipeline.denver.neighbourhoods FROM STDIN WITH (FORMAT CSV)""", f)
 
 conn.commit()
 conn.close()

@@ -71,13 +71,10 @@ def main():
             print(r.headers['content-type'])
             print(r.encoding)
 
-    #save_airbnb_files(denver_csv_gz_calendar_list, 15, 31, 21)
-    #save_airbnb_files(denver_csv_gz_listings_list, 15, 31, 21)
-    #save_airbnb_files(denver_csv_gz_reviews_list, 14, 30, 20)
     save_airbnb_files(denver_csv_listings_list, 12, 38, 28)
     save_airbnb_files(denver_csv_reviews_list, 11, 37, 27)
     save_airbnb_files(denver_neighborhood_csv_list, 18, 44, 34)
-    #save_airbnb_files(denver_neighborhood_geojson_list, 22, 48, 38)
+
 
 
 
